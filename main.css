@@ -2,6 +2,7 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow-y: hidden;
 }
 body {
     font-family: sans-serif;
@@ -34,6 +35,9 @@ input {
     height: 100%;
     padding: 20px;
     box-shadow: 0 0 10px grey;
+}
+h1 {
+    margin: 0;
 }
 h2 {
     margin-bottom: 10px;
@@ -69,4 +73,16 @@ form:invalid #calc {
 }
 #output{
     margin-top: 30px;
+}
+footer{
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 0.8em;
+}
+footer a {
+    display: block;
+    margin: 5px;
 }
