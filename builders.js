@@ -1,5 +1,19 @@
 "use strict";
 
+function assert(val, msg) {
+    if (!val) {
+        throw Error(msg || 'Assertion failure');
+    }
+}
+
+function assertInRange(val, min, max) {
+    assert(val >= min && val <= max, `Expected value ${val} to be in range ${min} -> ${max}`)
+}
+
+function degreesToRadians(degrees) {
+    return degrees * Math.PI / 180;
+}
+
 const builders = Object.freeze({
     buildLocation() {
         const builder = {

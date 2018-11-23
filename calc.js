@@ -1,6 +1,36 @@
 "use strict";
 
 function buildCalculator() {
+    function localClockTimeInRadians(clock) {
+        const previousMidnight = new Date(clock.millis());
+        previousMidnight.setMilliseconds(0);
+        previousMidnight.setSeconds(0);
+        previousMidnight.setMinutes(0);
+        previousMidnight.setHours(0);
+
+        const previousMidnightMillis = previousMidnight.getTime(),
+            secondsSinceMidnight = (clock.millis() - previousMidnightMillis) / MILLISECONDS_PER_SECOND;
+
+        return RADIANS_PER_DAY * secondsSinceMidnight / SECONDS_PER_DAY;
+    }
+
+    function localSiderealTimeInRadians(clock, lngRadians) {
+        const daysSince2000 = (clock.millis() - EPOCH_MILLIS_AT_2000_01_01_12_00_00) / MILLISECONDS_PER_DAY
+
+        return (4.894961212735792 + 6.30038809898489 * daysSince2000 + lngRadians) % RADIANS_PER_DAY;
+    }
+
+    function radiansToSiderealHours(radians) {
+        if (radians < 0) {
+            radians += RADIANS_PER_DAY;
+        }
+        return radians * 12 / Math.PI;
+    }
+
+    function zeroPad(num, len) {
+        return num.toString().padStart(len, '0');
+    }
+
     function calc(objectRightAscension, objectDeclination, userLocation, clock) {
         function radiansToClockTime(radians) {
             const siderealHours = radiansToSiderealHours(radians),
