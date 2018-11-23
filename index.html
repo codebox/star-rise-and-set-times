@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Star Rising</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div id="container">
+        <!--<h1>Rise/Set Time Calculator</h1>-->
+        <form id="inputValues">
+            <h2>Location</h2>
+            <div class="row">
+                <label>Latitude/Longitude (degrees)</label>
+                <div class="inputs">
+                    <input id="lat" placeholder="Latitude" required pattern="(-|\+|)[0-9]+(\.[0-9]+)?">
+                    <input id="lng" placeholder="Longitude" required pattern="(-|\+|)[0-9]+(\.[0-9]+)?">
+                </div>
+                <svg id="location" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                    <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+                </svg>                    
+            </div>
+
+            <div class="row">
+                <label>Presets</label>
+                <div class="inputs">
+                    <ul id="locationPresets"></ul>
+                </div>
+            </div>
+
+            <h2>Object Coordinates</h2>
+            <div class="row">
+                <label>Right Ascension</label>
+                <div class="inputs">
+                    <input id="raH" placeholder="Hours" required pattern="[0-9]{1,2}">
+                    <input id="raM" placeholder="Minutes" required pattern="[0-9]{1,2}">
+                    <input id="raS" placeholder="Seconds" required pattern="[0-9]{1,2}">
+                </div>
+            </div>
+
+            <div class="row">
+                <label>Declination</label>
+                <div class="inputs">
+                    <input id="decD" placeholder="Degrees" required pattern="(-|\+|)[0-9]{1,2}">
+                    <input id="decM" placeholder="Minutes" required pattern="[0-9]{1,2}">
+                    <input id="decS" placeholder="Seconds" required pattern="[0-9]{1,2}">
+                </div>
+            </div>
+
+            <div class="row">
+                <label>Presets</label>
+                <div class="inputs">
+                    <ul id="objectPresets"></ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <button id="calc">Calculate</button>
+                <button id="reset">Reset</button>
+            </div>            
+        </form>
+        
+        <div id="output">
+        </div>
+    </div>
+
+    <script src="utils.js"></script>
+    <script src="builders.js"></script>
+    <script src="calc.js"></script>
+    <script src="view.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

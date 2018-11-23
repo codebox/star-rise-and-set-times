@@ -1,0 +1,72 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: sans-serif;
+}
+ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+li {
+    display: inline;
+    cursor: pointer;
+    color: #0087ff;
+    margin-right: 10px;
+    font-size: 0.8em;
+    text-decoration: underline;
+}
+svg {
+    cursor: pointer;
+    margin-left: 5px;
+}
+input {
+    width: 6em;
+}
+#container{
+    width: 600px;
+    margin: 0 auto;
+    border-right: 1px solid grey;
+    border-left: 1px solid grey;
+    height: 100%;
+    padding: 20px;
+    box-shadow: 0 0 10px grey;
+}
+h2 {
+    margin-bottom: 10px;
+}
+#inputValues {
+    display: flex;
+    flex-direction: column;
+}
+.row {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin: 5px 0;
+}
+.row label {
+    flex-basis: 250px;
+    flex-shrink: 0;
+    font-weight: bold;
+}
+button {
+    border: 1px solid gray;
+    padding: 5px 10px;
+    background-color: white;
+    border-radius: 1px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+form:invalid #calc {
+    pointer-events: none;
+    color: lightgray;
+    border-color: lightgrey;
+    cursor: default;
+}
+#output{
+    margin-top: 30px;
+}
