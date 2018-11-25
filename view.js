@@ -89,7 +89,7 @@ const view = (() => {
 			output.innerHTML = buildOutputRow('Never sets');
 		},
 		risesAndSets(riseTime, setTime) {
-			output.innerHTML = buildOutputRow('Rises at:', riseTime) + buildOutputRow('Sets at:', setTime);
+			output.innerHTML = buildOutputRow('Rises at:', riseTime + ' UTC') + buildOutputRow('Sets at:', setTime + ' UTC');
 		}
 	};
 

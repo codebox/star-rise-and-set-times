@@ -14,32 +14,40 @@ function buildCalculator() {
         return RADIANS_PER_DAY * secondsSinceMidnight / SECONDS_PER_DAY;
     }
 
-    function localSiderealTimeInRadians(clock, lngRadians) {
-        const daysSince2000 = (clock.millis() - EPOCH_MILLIS_AT_2000_01_01_12_00_00) / MILLISECONDS_PER_DAY
-
-        return (4.894961212735792 + 6.30038809898489 * daysSince2000 + lngRadians) % RADIANS_PER_DAY;
-    }
-
-    function radiansToSiderealHours(radians) {
-        if (radians < 0) {
-            radians += RADIANS_PER_DAY;
-        }
-        return radians * 12 / Math.PI;
-    }
-
     function zeroPad(num, len) {
         return num.toString().padStart(len, '0');
     }
 
     function calc(objectRightAscension, objectDeclination, userLocation, clock) {
-        function radiansToClockTime(radians) {
-            const siderealHours = radiansToSiderealHours(radians),
-                clockTimeHours = (24 + (siderealHours - localSiderealHoursOffset)/CLOCK_HOURS_PER_SIDEREAL_HOUR) % 24,
-                hours = Math.floor(clockTimeHours),
-                minutes = Math.floor((clockTimeHours - hours) * MINUTES_PER_HOUR),
-                seconds = Math.floor((clockTimeHours - hours - minutes / MINUTES_PER_HOUR) * SECONDS_PER_HOUR);
+        function hoursToClockTime(timeInHours) {
+            const hours = Math.floor(timeInHours),
+                minutes = Math.floor((timeInHours - hours) * MINUTES_PER_HOUR),
+                seconds = Math.floor((timeInHours - hours - minutes / MINUTES_PER_HOUR) * SECONDS_PER_HOUR);
 
             return `${zeroPad(hours, 2)}:${zeroPad(minutes, 2)}:${zeroPad(seconds, 2)}`;
+        }
+
+        function unmod(r, a, b, m, x_0, x_1) {
+            // find all 'n' such that x_0 <= (n * m + r - a) / b <= x_1
+            const from_n = Math.ceil((x_0 * b + a - r) / m),
+                to_n = Math.floor((x_1 * b + a - r) / m);
+            const x_values = []
+            for (let n = from_n; n <= to_n; n++) {
+                x_values.push((n * m + r - a) / b);
+            }
+            return x_values;
+        }
+
+        function radiansToUtcTime(radians) {
+            const daysSince_2000_01_01_12 = (clock.millis() - EPOCH_MILLIS_AT_2000_01_01_12_00_00) / MILLISECONDS_PER_DAY,
+                prevMidDay = Math.floor(daysSince_2000_01_01_12),
+                // https://aa.usno.navy.mil/faq/docs/GAST.php
+                days = unmod(radians, 4.894961212735792 + userLocation.radians.lng, 6.30038809898489, 2 * Math.PI,
+                    prevMidDay, prevMidDay + 1)[0],
+                millisSinceEpoch = days * MILLISECONDS_PER_DAY + EPOCH_MILLIS_AT_2000_01_01_12_00_00,
+                millisSinceStartOfDay = millisSinceEpoch % MILLISECONDS_PER_DAY,
+                hoursSinceStartOfDay = millisSinceStartOfDay / (MILLISECONDS_PER_SECOND * SECONDS_PER_HOUR);
+            return hoursToClockTime(hoursSinceStartOfDay);
         }
 
         const ra = objectRightAscension.radians,
@@ -47,9 +55,7 @@ function buildCalculator() {
             lat = userLocation.radians.lat,
             lng = userLocation.radians.lng,
             neverRises = Math.abs(dec - lat) >= Math.PI / 2,
-            neverSets = Math.abs(dec + lat) >= Math.PI / 2,
-            localSiderealHoursOffsetRadians = localSiderealTimeInRadians(clock, lng) - localClockTimeInRadians(clock),
-            localSiderealHoursOffset = radiansToSiderealHours(localSiderealHoursOffsetRadians);
+            neverSets = Math.abs(dec + lat) >= Math.PI / 2;
 
         let riseTime, setTime;
 
@@ -58,8 +64,8 @@ function buildCalculator() {
                 riseTimeRadians = ra - c,
                 setTimeRadians = ra + c;
 
-            riseTime = radiansToClockTime(riseTimeRadians);
-            setTime = radiansToClockTime(setTimeRadians);
+            riseTime = radiansToUtcTime(riseTimeRadians);
+            setTime = radiansToUtcTime(setTimeRadians);
         }
 
         return {
