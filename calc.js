@@ -1,5 +1,15 @@
 "use strict";
 
+const constants = inBrowser ? {
+    MILLISECONDS_PER_SECOND,
+    RADIANS_PER_DAY,
+    SECONDS_PER_DAY,
+    MINUTES_PER_HOUR,
+    SECONDS_PER_HOUR,
+    EPOCH_MILLIS_AT_2000_01_01_12_00_00,
+    MILLISECONDS_PER_DAY
+} : require('./constants');
+
 function buildCalculator() {
     function localClockTimeInRadians(clock) {
         const previousMidnight = new Date(clock.millis());
@@ -9,9 +19,9 @@ function buildCalculator() {
         previousMidnight.setHours(0);
 
         const previousMidnightMillis = previousMidnight.getTime(),
-            secondsSinceMidnight = (clock.millis() - previousMidnightMillis) / MILLISECONDS_PER_SECOND;
+            secondsSinceMidnight = (clock.millis() - previousMidnightMillis) / constants.MILLISECONDS_PER_SECOND;
 
-        return RADIANS_PER_DAY * secondsSinceMidnight / SECONDS_PER_DAY;
+        return constants.RADIANS_PER_DAY * secondsSinceMidnight / constants.SECONDS_PER_DAY;
     }
 
     function zeroPad(num, len) {
@@ -21,8 +31,8 @@ function buildCalculator() {
     function calc(objectRightAscension, objectDeclination, userLocation, clock) {
         function hoursToClockTime(timeInHours) {
             const hours = Math.floor(timeInHours),
-                minutes = Math.floor((timeInHours - hours) * MINUTES_PER_HOUR),
-                seconds = Math.floor((timeInHours - hours - minutes / MINUTES_PER_HOUR) * SECONDS_PER_HOUR);
+                minutes = Math.floor((timeInHours - hours) * constants.MINUTES_PER_HOUR),
+                seconds = Math.floor((timeInHours - hours - minutes / constants.MINUTES_PER_HOUR) * constants.SECONDS_PER_HOUR);
 
             return `${zeroPad(hours, 2)}:${zeroPad(minutes, 2)}:${zeroPad(seconds, 2)}`;
         }
@@ -39,14 +49,14 @@ function buildCalculator() {
         }
 
         function radiansToUtcTime(radians) {
-            const daysSince_2000_01_01_12 = (clock.millis() - EPOCH_MILLIS_AT_2000_01_01_12_00_00) / MILLISECONDS_PER_DAY,
+            const daysSince_2000_01_01_12 = (clock.millis() - constants.EPOCH_MILLIS_AT_2000_01_01_12_00_00) / constants.MILLISECONDS_PER_DAY,
                 prevMidDay = Math.floor(daysSince_2000_01_01_12),
                 // https://aa.usno.navy.mil/faq/docs/GAST.php
                 days = unmod(radians, 4.894961212735792 + userLocation.radians.lng, 6.30038809898489, 2 * Math.PI,
                     prevMidDay, prevMidDay + 1)[0],
-                millisSinceEpoch = days * MILLISECONDS_PER_DAY + EPOCH_MILLIS_AT_2000_01_01_12_00_00,
-                millisSinceStartOfDay = millisSinceEpoch % MILLISECONDS_PER_DAY,
-                hoursSinceStartOfDay = millisSinceStartOfDay / (MILLISECONDS_PER_SECOND * SECONDS_PER_HOUR);
+                millisSinceEpoch = days * constants.MILLISECONDS_PER_DAY + constants.EPOCH_MILLIS_AT_2000_01_01_12_00_00,
+                millisSinceStartOfDay = millisSinceEpoch % constants.MILLISECONDS_PER_DAY,
+                hoursSinceStartOfDay = millisSinceStartOfDay / (constants.MILLISECONDS_PER_SECOND * constants.SECONDS_PER_HOUR);
             return hoursToClockTime(hoursSinceStartOfDay);
         }
 
@@ -90,3 +100,5 @@ function buildCalculator() {
         }
     });
 }
+
+exports.buildCalculator = buildCalculator;

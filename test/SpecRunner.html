@@ -12,6 +12,11 @@
   <script src="lib/jasmine-3.3.0/boot.js"></script>
 
   <!-- include source files here... -->
+  <script>
+    var inBrowser = true;
+    var exports = {}, module = {exports}, require = () => {};
+  </script>
+
   <script src="../constants.js"></script>
   <script src="../builders.js"></script>
   <script src="../calc.js"></script>
