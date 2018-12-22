@@ -24,6 +24,6 @@ view.onSubmit(values => {
 	} else if (result.neverSets) {
 		view.neverSets();
 	} else {
-		view.risesAndSets(result.riseTime, result.setTime);
+		view.risesAndSets(result.riseTime.text, result.setTime.text);
 	}	
 });

@@ -43,8 +43,8 @@ describe("Star Rise/Set Time Calculator", () => {
     function hasRiseAndSetTimes(riseTime, setTime) {
         expect(calculate().neverRises).toBe(false);
         expect(calculate().neverSets).toBe(false);
-        expect(calculate().riseTime).toBe(riseTime);
-        expect(calculate().setTime).toBe(setTime);
+        expect(calculate().riseTime.text).toBe(riseTime);
+        expect(calculate().setTime.text).toBe(setTime);
     }
 
     describe("At the North Pole", () => {

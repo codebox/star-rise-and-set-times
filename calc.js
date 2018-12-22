@@ -34,7 +34,10 @@ function buildCalculator() {
                 minutes = Math.floor((timeInHours - hours) * constants.MINUTES_PER_HOUR),
                 seconds = Math.floor((timeInHours - hours - minutes / constants.MINUTES_PER_HOUR) * constants.SECONDS_PER_HOUR);
 
-            return `${zeroPad(hours, 2)}:${zeroPad(minutes, 2)}:${zeroPad(seconds, 2)}`;
+            return {
+                text:`${zeroPad(hours, 2)}:${zeroPad(minutes, 2)}:${zeroPad(seconds, 2)}`,
+                hours, minutes, seconds
+            };
         }
 
         function unmod(r, a, b, m, x_0, x_1) {

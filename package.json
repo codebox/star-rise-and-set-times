@@ -1,0 +1,22 @@
+{
+  "name": "star-rise-and-set-times",
+  "version": "1.0.0",
+  "description": "A library for calculating the rising and setting times of stars.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codebox/star-rise-and-set-times.git"
+  },
+  "keywords": [
+    "astronomy"
+  ],
+  "author": "Rob Dawson <rob@codebox.net> (https://codebox.net)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codebox/star-rise-and-set-times/issues"
+  },
+  "homepage": "https://github.com/codebox/star-rise-and-set-times#readme"
+}
