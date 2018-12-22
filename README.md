@@ -2,7 +2,7 @@
 
 Here is a browser-based tool for calculating the rising and setting times of stars. You can [try it online here](https://codebox.net/pages/star-rise-and-set-time-calculator).
 
-<img alt="star rise and set calculator screenshot" src="./screenshot.png" width="200">
+<img alt="star rise and set calculator screenshot" src="./screenshot.png" width="600">
 
 The code is based on formulae [from](https://idlastro.gsfc.nasa.gov/ftp/pro/astro/hadec2altaz.pro) [various](http://aa.usno.navy.mil/faq/docs/GAST.php) [sources](https://astronomy.stackexchange.com/a/14508/24882) with much credit to [Barry Carter](http://wordpress.barrycarter.info) for his help and patience.
 
