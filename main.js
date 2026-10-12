@@ -10,20 +10,30 @@ view.addObjectPreset('Sirius', 6, 45, 9, -16, 42, 58);
 view.addObjectPreset('Polaris', 2, 31, 49, 89, 15, 38);
 view.addObjectPreset('Alpha Centauri', 14, 39, 36, -60, 50, 2);
 
-view.onSubmit(values => {
-	const location = builders.buildLocation().fromDegrees(values.lat, values.lng),
-	    clock = builders.buildClock().withRealTime(),
-	    ra = builders.buildRightAscension().fromHourMinSec(values.raH, values.raM, values.raS),
-	    dec = builders.buildDeclination().fromDegreesMinSec(values.decD < 0 || Object.is(values.decD, -0), Math.abs(values.decD), values.decM, values.decS),
-	    calculator = buildCalculator().forLocation(location).withClock(clock);
+function dateAndTime(time) {
+	return `${time.date.toISOString().slice(0, 10)} ${time.text}`;
+}
 
-	const result = calculator.calculate(ra, dec);
-	
+view.onSubmit(values => {
+	let result;
+	try {
+		const location = builders.buildLocation().fromDegrees(values.lat, values.lng),
+		    clock = builders.buildClock().withRealTime(),
+		    ra = builders.buildRightAscension().fromHourMinSec(values.raH, values.raM, values.raS),
+		    dec = builders.buildDeclination().fromDegreesMinSec(values.decD < 0 || Object.is(values.decD, -0), Math.abs(values.decD), values.decM, values.decS),
+		    calculator = buildCalculator().forLocation(location).withClock(clock);
+
+		result = calculator.calculate(ra, dec);
+	} catch (e) {
+		view.error('Please check the values you entered, one of them is out of range');
+		return;
+	}
+
 	if (result.neverRises) {
 		view.neverRises();
 	} else if (result.neverSets) {
 		view.neverSets();
 	} else {
-		view.risesAndSets(result.riseTime.text, result.setTime.text);
+		view.risesAndSets(dateAndTime(result.riseTime), dateAndTime(result.setTime));
 	}	
 });

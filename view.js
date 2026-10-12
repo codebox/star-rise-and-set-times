@@ -41,8 +41,12 @@ const view = (() => {
 		        	navigator.geolocation.getCurrentPosition(position => {
 		        		inputFields.lat.value = position.coords.latitude;
 		        		inputFields.lng.value = position.coords.longitude;
+		        	}, error => {
+		        		viewObject.error(`Unable to get your location: ${error.message}`);
 		        	});
-		    	} 
+		    	} else {
+		    		viewObject.error('Your browser cannot provide your location');
+		    	}
 			};
 		},
 		reset() {
@@ -89,7 +93,10 @@ const view = (() => {
 			output.innerHTML = buildOutputRow('Never sets');
 		},
 		risesAndSets(riseTime, setTime) {
-			output.innerHTML = buildOutputRow('Rises at:', riseTime + ' UTC') + buildOutputRow('Sets at:', setTime + ' UTC');
+			output.innerHTML = buildOutputRow('Next rises at:', riseTime + ' UTC') + buildOutputRow('Next sets at:', setTime + ' UTC');
+		},
+		error(message) {
+			output.innerHTML = buildOutputRow('Error', message);
 		}
 	};
 

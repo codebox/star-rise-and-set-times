@@ -174,6 +174,38 @@ describe("Star Rise/Set Time Calculator", () => {
         });
     });
 
+    describe("Results are the next rise and set after the current time", () => {
+        beforeEach(() => {
+            atLocation(51.476852, -0.000500);
+            theObjectWithCoordinates(rightAscension(6, 45, 9), declination(-16, 42, 47));
+        });
+
+        it("after the object has risen, the next rise is the following day", () => {
+            atUTCTime(2018, 1, 1, 23, 0, 0);
+            hasRiseAndSetTimes("19:24:15", "04:29:26");
+            expect(calculate().riseTime.date.toISOString().slice(0, 10)).toBe("2018-01-02");
+            expect(calculate().setTime.date.toISOString().slice(0, 10)).toBe("2018-01-02");
+        });
+
+        it("dates are returned with the times", () => {
+            atUTCTime(2018, 1, 1, 12, 0, 0);
+            expect(calculate().riseTime.date.toISOString().slice(0, 19)).toBe("2018-01-01T19:28:11");
+            expect(calculate().setTime.date.toISOString().slice(0, 19)).toBe("2018-01-02T04:29:26");
+        });
+
+        it("times before 1970 are correct", () => {
+            atUTCTime(1960, 1, 1, 12, 0, 0);
+            hasRiseAndSetTimes("19:31:56", "04:33:11");
+        });
+    });
+
+    describe("A fixed clock", () => {
+        it("does not treat years 0-99 as 1900-1999", () => {
+            atUTCTime(50, 3, 4, 5, 6, 7);
+            expect(new Date(clock.millis()).getUTCFullYear()).toBe(50);
+        });
+    });
+
     describe("In Cerro Paranal, Chile", () => {
         beforeEach(() => {
             atLocation(-24.627222, -70.404167);

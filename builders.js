@@ -57,7 +57,11 @@ const builders = Object.freeze({
                 assertInRange(minute, 0, 59);
                 assertInRange(second, 0, 59);
 
-                const millisSinceEpoch = Date.UTC(year, month - 1, day, hour, minute, second);
+                // Date.UTC() treats years 0-99 as 1900-1999, setUTCFullYear() doesn't
+                const date = new Date(0);
+                date.setUTCFullYear(year, month - 1, day);
+                date.setUTCHours(hour, minute, second, 0);
+                const millisSinceEpoch = date.getTime();
 
                 return Object.freeze({
                     millis() {
