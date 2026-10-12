@@ -3,8 +3,16 @@
   "version": "1.0.0",
   "description": "A library for calculating the rising and setting times of stars.",
   "main": "index.js",
-  "directories": {
-    "test": "test"
+  "type": "module",
+  "exports": "./index.js",
+  "files": [
+    "index.js",
+    "builders.js",
+    "calc.js",
+    "constants.js"
+  ],
+  "scripts": {
+    "test": "jasmine --config=test/jasmine.json"
   },
   "repository": {
     "type": "git",
@@ -18,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/codebox/star-rise-and-set-times/issues"
   },
-  "homepage": "https://github.com/codebox/star-rise-and-set-times#readme"
+  "homepage": "https://github.com/codebox/star-rise-and-set-times#readme",
+  "devDependencies": {
+    "jasmine": "^7.0.0"
+  }
 }

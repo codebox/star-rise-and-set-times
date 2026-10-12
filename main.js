@@ -1,4 +1,6 @@
-"use strict";
+import * as builders from './builders.js';
+import {buildCalculator} from './calc.js';
+import {view} from './view.js';
 
 view.init();
 

@@ -1,16 +1,6 @@
-"use strict";
+import * as constants from './constants.js';
 
-const constants = inBrowser ? {
-    MILLISECONDS_PER_SECOND,
-    RADIANS_PER_DAY,
-    SECONDS_PER_DAY,
-    SECONDS_PER_MINUTE,
-    SECONDS_PER_HOUR,
-    EPOCH_MILLIS_AT_2000_01_01_12_00_00,
-    MILLISECONDS_PER_DAY
-} : require('./constants');
-
-function buildCalculator() {
+export function buildCalculator() {
     function localClockTimeInRadians(clock) {
         const previousMidnight = new Date(clock.millis());
         previousMidnight.setMilliseconds(0);
@@ -105,5 +95,3 @@ function buildCalculator() {
         }
     });
 }
-
-exports.buildCalculator = buildCalculator;

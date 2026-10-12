@@ -1,9 +1,4 @@
-"use strict";
-
-const buildersConstants = inBrowser ? {
-    ARC_MINUTES_PER_DEGREE,
-    ARC_SECONDS_PER_DEGREE
-} : require('./constants');
+import * as constants from './constants.js';
 
 function assert(val, msg) {
     if (!val) {
@@ -113,15 +108,12 @@ const builders = Object.freeze({
 
                 return builder.fromDegrees(factor * (
                     absDegrees +
-                    absArcMinutes / buildersConstants.ARC_MINUTES_PER_DEGREE +
-                    absArcSeconds / buildersConstants.ARC_SECONDS_PER_DEGREE));
+                    absArcMinutes / constants.ARC_MINUTES_PER_DEGREE +
+                    absArcSeconds / constants.ARC_SECONDS_PER_DEGREE));
             }
         };
         return builder;
     }
 });
 
-exports.buildLocation = builders.buildLocation;
-exports.buildClock = builders.buildClock;
-exports.buildRightAscension = builders.buildRightAscension;
-exports.buildDeclination = builders.buildDeclination;
+export const {buildLocation, buildClock, buildRightAscension, buildDeclination} = builders;

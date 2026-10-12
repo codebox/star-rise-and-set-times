@@ -1,6 +1,4 @@
-"use strict";
-
-const view = (() => {
+export const view = (() => {
 	const form = document.getElementsByTagName('form')[0],
 		submit = document.getElementById('calc'),
         reset = document.getElementById('reset'),

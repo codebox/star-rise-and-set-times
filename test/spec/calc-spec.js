@@ -1,4 +1,5 @@
-"use strict";
+import * as builders from '../../builders.js';
+import {buildCalculator} from '../../calc.js';
 
 describe("Star Rise/Set Time Calculator", () => {
     let location, clock, ra, dec;
