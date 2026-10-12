@@ -34,6 +34,14 @@ svg {
 input {
     width: 6em;
 }
+#date {
+    width: 12em;
+}
+.hint {
+    color: var(--muted);
+    font-size: 0.8em;
+    margin-top: 4px;
+}
 :focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 1px;
@@ -91,7 +99,7 @@ form:invalid #calc {
     cursor: default;
 }
 #output{
-    margin-top: 30px;
+    margin-top: 10px;
 }
 #output .row {
     align-items: flex-start;

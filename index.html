@@ -10,6 +10,15 @@
     <div id="container">
         <h1>Rise/Set Time Calculator</h1>
         <form id="inputValues">
+            <h2>Date</h2>
+            <div class="row">
+                <label>Date</label>
+                <div class="inputs">
+                    <input id="date" type="date" required min="1900-01-01" max="2100-12-31">
+                    <div class="hint">Shows the first rise and set after the start of this day in your time zone, or after now if it's today</div>
+                </div>
+            </div>
+
             <h2>Location</h2>
             <div class="row">
                 <label>Latitude/Longitude (degrees)</label>
@@ -62,7 +71,9 @@
             </div>            
         </form>
         
-        <div id="output">
+        <div id="output" hidden>
+            <h2>Result</h2>
+            <div id="outputData"></div>
         </div>
 
         <footer>

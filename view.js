@@ -4,7 +4,9 @@ export const view = (() => {
         reset = document.getElementById('reset'),
 		location = document.getElementById('location'),
 		inputs = form.querySelectorAll('input'),
+		date = document.getElementById('date'),
 		output = document.getElementById('output'),
+		outputData = document.getElementById('outputData'),
 		locationPresets = document.getElementById('locationPresets'),
 		objectPresets = document.getElementById('objectPresets'),
 		inputFields = {};
@@ -19,6 +21,14 @@ export const view = (() => {
 			local = time.date.toLocaleString(undefined, {dateStyle: 'medium', timeStyle: 'long'});
 		return `${utc}<div class="local">${local} (your time)</div>`;
 	}
+	function showOutput(html) {
+		output.hidden = false;
+		outputData.innerHTML = html;
+	}
+	function todayText() {
+		const now = new Date();
+		return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+	}
 	function setFieldValue(fieldId, value) {
 		if (value !== undefined) {
 			inputFields[fieldId].value = value;
@@ -28,10 +38,13 @@ export const view = (() => {
 	const viewObject = {
 		init() {
 			inputs.forEach(el => inputFields[el.id] = el);
+			date.value = todayText();
 
 			submit.onclick = e => {
 				e.preventDefault();
-				if (form.checkValidity() && submitHandler) {
+				if (!form.checkValidity()) {
+					viewObject.error('Enter a value in every field, within the allowed range');
+				} else if (submitHandler) {
 					submitHandler(viewObject.getValues());
 				}
 			};
@@ -54,11 +67,13 @@ export const view = (() => {
 		},
 		reset() {
 			inputs.forEach(el => el.value = '');
-			output.innerHTML = '';
+			date.value = todayText();
+			output.hidden = true;
+			outputData.innerHTML = '';
 		},
 		getValues() {
 			const values = {};
-			inputs.forEach(el => values[el.id] = parseFloat(el.value));
+			inputs.forEach(el => values[el.id] = el.type === 'date' ? el.value : parseFloat(el.value));
 			return values;
 		},
 		onSubmit(handler) {
@@ -90,21 +105,21 @@ export const view = (() => {
 			objectPresets.appendChild(newPreset);
 		},
 		neverRises() {
-			output.innerHTML = buildOutputRow('Never rises');
+			showOutput(buildOutputRow('Never rises'));
 		},
 		neverSets() {
-			output.innerHTML = buildOutputRow('Never sets');
+			showOutput(buildOutputRow('Never sets'));
 		},
 		risesAndSets(riseTime, setTime) {
 			const events = [
-				{label: 'Next rises at:', time: riseTime},
-				{label: 'Next sets at:', time: setTime}
+				{label: 'Rises at:', time: riseTime},
+				{label: 'Sets at:', time: setTime}
 			].sort((a, b) => a.time.date - b.time.date);
 
-			output.innerHTML = events.map(event => buildOutputRow(event.label, formatTime(event.time))).join('');
+			showOutput(events.map(event => buildOutputRow(event.label, formatTime(event.time))).join(''));
 		},
 		error(message) {
-			output.innerHTML = buildOutputRow('Error', message);
+			showOutput(buildOutputRow('Error', message));
 		}
 	};
 
