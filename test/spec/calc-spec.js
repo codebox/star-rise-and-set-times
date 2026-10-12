@@ -35,12 +35,6 @@ describe("Star Rise/Set Time Calculator", () => {
         expect(calculate().riseTime).toBe(undefined);
         expect(calculate().setTime).toBe(undefined);
     }
-    function neverRisesOrSets() {
-        expect(calculate().neverRises).toBe(true);
-        expect(calculate().neverSets).toBe(true);
-        expect(calculate().riseTime).toBe(undefined);
-        expect(calculate().setTime).toBe(undefined);
-    }
     function hasRiseAndSetTimes(riseTime, setTime) {
         expect(calculate().neverRises).toBe(false);
         expect(calculate().neverSets).toBe(false);
@@ -70,9 +64,9 @@ describe("Star Rise/Set Time Calculator", () => {
             theObjectWithCoordinates(rightAscension(12, 0, 0), declination(-45, 0, 0));
             neverRises();
         });
-        it("an object on the celestial equator never rises or sets", () => {
+        it("an object on the celestial equator never sets, because refraction lifts it above the horizon", () => {
             theObjectWithCoordinates(rightAscension(12, 0, 0), declination(0, 0, 0));
-            neverRisesOrSets();
+            neverSets();
         });
     });
 
@@ -98,9 +92,9 @@ describe("Star Rise/Set Time Calculator", () => {
             theObjectWithCoordinates(rightAscension(12, 0, 0), declination(-45, 0, 0));
             neverSets();
         });
-        it("an object on the celestial equator never rises or sets", () => {
+        it("an object on the celestial equator never sets, because refraction lifts it above the horizon", () => {
             theObjectWithCoordinates(rightAscension(12, 0, 0), declination(0, 0, 0));
-            neverRisesOrSets();
+            neverSets();
         });
     });
 
@@ -110,13 +104,13 @@ describe("Star Rise/Set Time Calculator", () => {
             atUTCTime(2018, 1, 1, 0, 0, 0);
         });
 
-        it("an object at the north celestial pole never rises or sets", () => {
+        it("an object at the north celestial pole never sets, because refraction lifts it above the horizon", () => {
             theObjectWithCoordinates(rightAscension(0, 0, 0), declination(90, 0, 0));
-            neverRisesOrSets();
+            neverSets();
         });
-        it("an object at the south celestial pole never rises or sets", () => {
+        it("an object at the south celestial pole never sets, because refraction lifts it above the horizon", () => {
             theObjectWithCoordinates(rightAscension(0, 0, 0), declination(-90, 0, 0));
-            neverRisesOrSets();
+            neverSets();
         });
     });
 
@@ -132,13 +126,13 @@ describe("Star Rise/Set Time Calculator", () => {
 
             it("on 1st January 2018", () => {
                 atUTCTime(2018, 1, 1, 12, 0, 0);
-                hasRiseAndSetTimes("19:28:11", "04:29:26");
+                hasRiseAndSetTimes("19:25:01", "04:34:12");
             });
 
             it("on 1st June 2018", () => {
                 atUTCTime(2018, 6, 1, 12, 0, 0);
                 theObjectWithCoordinates(rightAscension(6, 45, 9), declination(-16, 42, 47));
-                hasRiseAndSetTimes("09:30:33", "18:35:44");
+                hasRiseAndSetTimes("09:27:24", "18:40:30");
             });
         });
 
@@ -165,12 +159,12 @@ describe("Star Rise/Set Time Calculator", () => {
 
             it("on 1st January 2018", () => {
                 atUTCTime(2018, 1, 1, 12, 0, 0);
-                hasRiseAndSetTimes("13:15:23", "19:09:47");
+                hasRiseAndSetTimes("13:09:36", "19:17:32");
             });
 
             it("on 1st June 2018", () => {
                 atUTCTime(2018, 6, 1, 12, 0, 0);
-                hasRiseAndSetTimes("03:17:45", "09:12:09");
+                hasRiseAndSetTimes("03:11:58", "09:19:56");
             });
         });
     });
@@ -183,20 +177,20 @@ describe("Star Rise/Set Time Calculator", () => {
 
         it("after the object has risen, the next rise is the following day", () => {
             atUTCTime(2018, 1, 1, 23, 0, 0);
-            hasRiseAndSetTimes("19:24:15", "04:29:26");
+            hasRiseAndSetTimes("19:21:05", "04:34:12");
             expect(calculate().riseTime.date.toISOString().slice(0, 10)).toBe("2018-01-02");
             expect(calculate().setTime.date.toISOString().slice(0, 10)).toBe("2018-01-02");
         });
 
         it("dates are returned with the times", () => {
             atUTCTime(2018, 1, 1, 12, 0, 0);
-            expect(calculate().riseTime.date.toISOString().slice(0, 19)).toBe("2018-01-01T19:28:11");
-            expect(calculate().setTime.date.toISOString().slice(0, 19)).toBe("2018-01-02T04:29:26");
+            expect(calculate().riseTime.date.toISOString().slice(0, 19)).toBe("2018-01-01T19:25:01");
+            expect(calculate().setTime.date.toISOString().slice(0, 19)).toBe("2018-01-02T04:34:12");
         });
 
         it("times before 1970 are correct", () => {
             atUTCTime(1960, 1, 1, 12, 0, 0);
-            hasRiseAndSetTimes("19:31:56", "04:33:11");
+            hasRiseAndSetTimes("19:25:49", "04:35:43");
         });
     });
 
@@ -204,6 +198,23 @@ describe("Star Rise/Set Time Calculator", () => {
         it("does not treat years 0-99 as 1900-1999", () => {
             atUTCTime(50, 3, 4, 5, 6, 7);
             expect(new Date(clock.millis()).getUTCFullYear()).toBe(50);
+        });
+    });
+
+    describe("In Tromsø, Norway, where Sirius only just rises", () => {
+        beforeEach(() => {
+            atLocation(69.6492, 18.9553);
+            theObjectWithCoordinates(rightAscension(6, 45, 9), declination(-16, 42, 47));
+        });
+
+        it("on 1st January 2026", () => {
+            atUTCTime(2026, 1, 1, 12, 0, 0);
+            hasRiseAndSetTimes("20:10:02", "01:18:10");
+        });
+
+        it("on 1st June 2026", () => {
+            atUTCTime(2026, 6, 1, 12, 0, 0);
+            hasRiseAndSetTimes("10:12:26", "15:24:28");
         });
     });
 
@@ -219,13 +230,13 @@ describe("Star Rise/Set Time Calculator", () => {
 
             it("on 1st January 2018", () => {
                 atUTCTime(2018, 1, 1, 12, 0, 0);
-                hasRiseAndSetTimes("22:09:05", "11:10:14");
+                hasRiseAndSetTimes("22:07:13", "11:13:42");
             });
 
             it("on 1st June 2018", () => {
                 atUTCTime(2018, 6, 1, 12, 0, 0);
                 theObjectWithCoordinates(rightAscension(6, 45, 9), declination(-16, 42, 47));
-                hasRiseAndSetTimes("12:15:22", "01:16:31");
+                hasRiseAndSetTimes("12:13:32", "01:20:01");
             });
         });
 
@@ -236,12 +247,12 @@ describe("Star Rise/Set Time Calculator", () => {
 
             it("on 1st January 2018", () => {
                 atUTCTime(2018, 1, 1, 12, 0, 0);
-                hasRiseAndSetTimes("02:53:30", "22:16:03");
+                hasRiseAndSetTimes("02:44:33", "22:27:46");
             });
 
             it("on 1st June 2018", () => {
                 atUTCTime(2018, 6, 1, 12, 0, 0);
-                hasRiseAndSetTimes("16:59:48", "12:22:20");
+                hasRiseAndSetTimes("16:50:51", "12:34:07");
             });
         });
 
@@ -252,12 +263,12 @@ describe("Star Rise/Set Time Calculator", () => {
 
             it("on 1st January 2018", () => {
                 atUTCTime(2018, 1, 1, 12, 0, 0);
-                hasRiseAndSetTimes("13:54:09", "03:52:43");
+                hasRiseAndSetTimes("13:52:24", "03:56:25");
             });
 
             it("on 1st June 2018", () => {
                 atUTCTime(2018, 6, 1, 12, 0, 0);
-                hasRiseAndSetTimes("03:56:30", "17:59:01");
+                hasRiseAndSetTimes("03:54:48", "18:02:44");
             });
         });
     });

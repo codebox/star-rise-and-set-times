@@ -5,6 +5,23 @@ export function buildCalculator() {
         return num.toString().padStart(len, '0');
     }
 
+    function precessFromJ2000(ra, dec, millisSinceEpoch) {
+        // Catalogue coordinates are for the year 2000, but precession moves them by about 50 arcseconds a year.
+        // Meeus, Astronomical Algorithms, ch. 21 (rigorous method)
+        const t = (millisSinceEpoch - constants.EPOCH_MILLIS_AT_2000_01_01_12_00_00) / constants.MILLISECONDS_PER_DAY / constants.DAYS_PER_JULIAN_CENTURY,
+            zeta = (2306.2181 * t + 0.30188 * t * t + 0.017998 * t * t * t) * constants.RADIANS_PER_ARC_SECOND,
+            z = (2306.2181 * t + 1.09468 * t * t + 0.018203 * t * t * t) * constants.RADIANS_PER_ARC_SECOND,
+            theta = (2004.3109 * t - 0.42665 * t * t - 0.041833 * t * t * t) * constants.RADIANS_PER_ARC_SECOND,
+            a = Math.cos(dec) * Math.sin(ra + zeta),
+            b = Math.cos(theta) * Math.cos(dec) * Math.cos(ra + zeta) - Math.sin(theta) * Math.sin(dec),
+            c = Math.sin(theta) * Math.cos(dec) * Math.cos(ra + zeta) + Math.cos(theta) * Math.sin(dec);
+
+        return {
+            ra: Math.atan2(a, b) + z,
+            dec: Math.asin(c)
+        };
+    }
+
     function calc(objectRightAscension, objectDeclination, userLocation, clock) {
         function millisToClockTime(millisSinceEpoch) {
             // the modulo must stay positive for times before 1970
@@ -44,17 +61,18 @@ export function buildCalculator() {
             return millisToClockTime(millisSinceEpoch);
         }
 
-        const ra = objectRightAscension.radians,
-            dec = objectDeclination.radians,
+        const {ra, dec} = precessFromJ2000(objectRightAscension.radians, objectDeclination.radians, clock.millis()),
             lat = userLocation.radians.lat,
-            lng = userLocation.radians.lng,
-            neverRises = Math.abs(dec - lat) >= Math.PI / 2,
-            neverSets = Math.abs(dec + lat) >= Math.PI / 2;
+            h0 = constants.ALTITUDE_AT_RISE_AND_SET_RADIANS,
+            // the cosine of the hour angle at which the object is at altitude h0
+            cosHourAngle = (Math.sin(h0) - Math.sin(lat) * Math.sin(dec)) / (Math.cos(lat) * Math.cos(dec)),
+            neverRises = cosHourAngle > 1,
+            neverSets = cosHourAngle < -1;
 
         let riseTime, setTime;
 
         if (!neverRises && !neverSets) {
-            const c = Math.acos(-Math.tan(dec) * Math.tan(lat)),
+            const c = Math.acos(cosHourAngle),
                 riseTimeRadians = ra - c,
                 setTimeRadians = ra + c;
 

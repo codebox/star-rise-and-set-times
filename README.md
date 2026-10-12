@@ -6,7 +6,14 @@ Here is a browser-based tool for calculating the rising and setting times of sta
 
 The code is based on formulae [from](https://idlastro.gsfc.nasa.gov/ftp/pro/astro/hadec2altaz.pro) [various](http://aa.usno.navy.mil/faq/docs/GAST.php) [sources](https://astronomy.stackexchange.com/a/14508/24882) with much credit to [Barry Carter](http://wordpress.barrycarter.info) for his help and patience.
 
-This tool does not take into account atmospheric refraction, which can affect rising/setting times by several minutes - if you need that kind of accuracy then see [this page from the US Naval Observatory](https://aa.usno.navy.mil/data/docs/mrst.php). The results [have been checked](https://github.com/codebox/star-rise-and-set-times/blob/master/test/spec/calc-spec.js) against various  [other](https://aa.usno.navy.mil/data/docs/mrst.php) [online](https://www.wolframalpha.com/) [tools](https://in-the-sky.org/), written by people far more competent than me, and they broadly agree, although each tool gives slightly different answers. It is probably safe to assume accuracy to within &plusmn;10 minutes.
+Enter the object's coordinates for the year 2000 (J2000), as given by most star catalogues. The calculation then:
+
+- corrects the coordinates for precession between 2000 and today, which moves them by about 50 arcseconds a year
+- uses the standard value for atmospheric refraction at the horizon (34 arcminutes), so the times are when the object appears to rise and set, not when it crosses the geometric horizon
+
+It ignores nutation, aberration and, for most stars, their own motion across the sky, which usually change the times by no more than a few seconds. The bigger uncertainty is the atmosphere itself: real refraction varies with temperature and pressure, and hills, buildings or your height above sea level change where the horizon is. Expect the times to be within a minute or so at mid-latitudes, and less accurate near the poles or for objects that only just rise, which cross the horizon at a shallow angle.
+
+The expected values in [the tests](test/spec/calc-spec.js) have been checked against a separate calculation that finds when the object's altitude crosses -34 arcminutes by searching through the day.
 
 ## Running it locally
 

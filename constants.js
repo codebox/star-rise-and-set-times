@@ -1,6 +1,7 @@
 export const ARC_MINUTES_PER_DEGREE = 60,
     ARC_SECONDS_PER_ARC_MINUTE = 60,
     ARC_SECONDS_PER_DEGREE = ARC_MINUTES_PER_DEGREE * ARC_SECONDS_PER_ARC_MINUTE,
+    RADIANS_PER_ARC_SECOND = Math.PI / (180 * ARC_SECONDS_PER_DEGREE),
     MILLISECONDS_PER_SECOND = 1000,
     SECONDS_PER_MINUTE = 60,
     MINUTES_PER_HOUR = 60,
@@ -14,5 +15,9 @@ export const ARC_MINUTES_PER_DEGREE = 60,
     // Greenwich mean sidereal time = GMST_HOURS_AT_2000_01_01_12 + GMST_HOURS_PER_DAY * (days since 2000-01-01 12:00 UTC)
     // https://aa.usno.navy.mil/faq/docs/GAST.php
     GMST_HOURS_AT_2000_01_01_12 = 18.697374558,
-    GMST_HOURS_PER_DAY = 24.06570982441908;
+    GMST_HOURS_PER_DAY = 24.06570982441908,
+    DAYS_PER_JULIAN_CENTURY = 36525,
+    // Atmospheric refraction lifts an object on the horizon by about 34 arcminutes, so a star appears to rise or
+    // set when its true altitude is -34', the standard value used by almanacs (Meeus, Astronomical Algorithms, ch. 15)
+    ALTITUDE_AT_RISE_AND_SET_RADIANS = -34 * 60 * RADIANS_PER_ARC_SECOND;
 

@@ -9,7 +9,7 @@ view.addLocationPreset('South Pole', -90, 0);
 view.addLocationPreset('Manchester', 53.4808, -2.2426);
 
 view.addObjectPreset('Sirius', 6, 45, 9, -16, 42, 58);
-view.addObjectPreset('Polaris', 2, 31, 49, 89, 15, 38);
+view.addObjectPreset('Polaris', 2, 31, 49, 89, 15, 51);
 view.addObjectPreset('Alpha Centauri', 14, 39, 36, -60, 50, 2);
 
 function dateAndTime(time) {
