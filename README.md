@@ -23,7 +23,11 @@ The page uses JavaScript modules, which browsers won't load from `file://` URLs,
 
 ## Using it as a library
 
-The version on npm (1.0.0) is an older one with a different API. To use the code described here, install it from GitHub: `npm install github:codebox/star-rise-and-set-times`.
+```
+npm install star-rise-and-set-times
+```
+
+Version 2 is an ES module and returns different results from version 1: the next rise and set after the clock's time (rather than those in the 24 hours from the previous noon UTC), with dates, and with refraction and precession allowed for.
 
 ```js
 import {buildCalculator, buildClock, buildLocation, buildRightAscension, buildDeclination} from 'star-rise-and-set-times';
