@@ -14,6 +14,11 @@ export const view = (() => {
 	function buildOutputRow(labelText, otherText="") {
 		return `<div class="row"><label>${labelText}</label><div>${otherText}</div></div>`;
 	}
+	function formatTime(time) {
+		const utc = `${time.date.toISOString().slice(0, 10)} ${time.text} UTC`,
+			local = time.date.toLocaleString(undefined, {dateStyle: 'medium', timeStyle: 'long'});
+		return `${utc}<div class="local">${local} (your time)</div>`;
+	}
 	function setFieldValue(fieldId, value) {
 		if (value !== undefined) {
 			inputFields[fieldId].value = value;
@@ -91,7 +96,12 @@ export const view = (() => {
 			output.innerHTML = buildOutputRow('Never sets');
 		},
 		risesAndSets(riseTime, setTime) {
-			output.innerHTML = buildOutputRow('Next rises at:', riseTime + ' UTC') + buildOutputRow('Next sets at:', setTime + ' UTC');
+			const events = [
+				{label: 'Next rises at:', time: riseTime},
+				{label: 'Next sets at:', time: setTime}
+			].sort((a, b) => a.time.date - b.time.date);
+
+			output.innerHTML = events.map(event => buildOutputRow(event.label, formatTime(event.time))).join('');
 		},
 		error(message) {
 			output.innerHTML = buildOutputRow('Error', message);

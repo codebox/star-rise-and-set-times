@@ -1,11 +1,17 @@
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow-y: hidden;
+:root {
+    --accent: #006BB7;
+    --text: #222;
+    --muted: #666;
+    --border: grey;
+}
+* {
+    box-sizing: border-box;
 }
 body {
+    margin: 0;
     font-family: sans-serif;
+    color: var(--text);
+    background-color: white;
 }
 ul{
     list-style-type: none;
@@ -13,28 +19,35 @@ ul{
     padding: 0;
 }
 li {
-    display: inline;
+    display: inline-block;
     cursor: pointer;
-    color: #0087ff;
-    margin-right: 10px;
+    color: var(--accent);
+    margin: 2px 10px 2px 0;
     font-size: 0.8em;
     text-decoration: underline;
 }
 svg {
     cursor: pointer;
     margin-left: 5px;
+    fill: var(--accent);
 }
 input {
     width: 6em;
 }
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
 #container{
-    width: 600px;
+    display: flex;
+    flex-direction: column;
+    max-width: 640px;
+    min-height: 100vh;
     margin: 0 auto;
-    border-right: 1px solid grey;
-    border-left: 1px solid grey;
-    height: 100%;
+    border-right: 1px solid var(--border);
+    border-left: 1px solid var(--border);
     padding: 20px;
-    box-shadow: 0 0 10px grey;
+    box-shadow: 0 0 10px var(--border);
 }
 h1 {
     margin: 0;
@@ -65,24 +78,54 @@ button {
     margin-right: 5px;
     cursor: pointer;
 }
+#calc {
+    color: white;
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
 form:invalid #calc {
     pointer-events: none;
     color: lightgray;
+    background-color: white;
     border-color: lightgrey;
     cursor: default;
 }
 #output{
     margin-top: 30px;
 }
+#output .row {
+    align-items: flex-start;
+}
+.local {
+    color: var(--muted);
+    font-size: 0.9em;
+    margin-top: 2px;
+}
 footer{
-    position: absolute;
-    width: 100%;
-    bottom: 0;
+    margin-top: auto;
+    padding-top: 30px;
     text-align: center;
-    margin-bottom: 10px;
     font-size: 0.8em;
 }
 footer a {
     display: block;
     margin: 5px;
+    color: var(--accent);
+}
+@media (max-width: 560px) {
+    #container {
+        padding: 16px;
+        border: none;
+        box-shadow: none;
+    }
+    .row {
+        flex-wrap: wrap;
+    }
+    .row label {
+        flex-basis: 100%;
+        margin-bottom: 4px;
+    }
+    #output .row {
+        margin-bottom: 12px;
+    }
 }
