@@ -10,6 +10,11 @@ function assertInRange(val, min, max) {
     assert(val >= min && val <= max, `Expected value ${val} to be in range ${min} -> ${max}`)
 }
 
+function assertValidSeconds(val) {
+    // catalogues give seconds with a fractional part, e.g. 08.92
+    assert(val >= 0 && val < 60, `Expected value ${val} to be in range 0 -> 59.999...`)
+}
+
 function degreesToRadians(degrees) {
     return degrees * Math.PI / 180;
 }
@@ -79,7 +84,7 @@ const builders = Object.freeze({
             fromHourMinSec(hours, minutes, seconds) {
                 assertInRange(hours, 0, 23);
                 assertInRange(minutes, 0, 59);
-                assertInRange(seconds, 0, 59);
+                assertValidSeconds(seconds);
 
                 return builder.fromHour(hours + minutes/60 + seconds/3600);
             }
@@ -98,8 +103,8 @@ const builders = Object.freeze({
             },
             fromDegreesMinSec(negative, degrees, arcMinutes, arcSeconds) {
                 assertInRange(degrees, -90, 90);
-                assertInRange(arcMinutes, 0, 60);
-                assertInRange(arcSeconds, 0, 60);
+                assertInRange(arcMinutes, 0, 59);
+                assertValidSeconds(arcSeconds);
 
                 const absDegrees = Math.abs(degrees),
                     absArcMinutes = Math.abs(arcMinutes),

@@ -194,6 +194,18 @@ describe("Star Rise/Set Time Calculator", () => {
         });
     });
 
+    describe("Coordinates", () => {
+        it("accept fractional seconds", () => {
+            expect(rightAscension(6, 45, 8.92).radians).toBeCloseTo((6 + 45 / 60 + 8.92 / 3600) * Math.PI / 12, 12);
+            expect(declination(-16, 42, 58.5).radians).toBeCloseTo(-(16 + 42 / 60 + 58.5 / 3600) * Math.PI / 180, 12);
+        });
+
+        it("reject 60 seconds", () => {
+            expect(() => rightAscension(6, 45, 60)).toThrow();
+            expect(() => declination(-16, 42, 60)).toThrow();
+        });
+    });
+
     describe("A fixed clock", () => {
         it("does not treat years 0-99 as 1900-1999", () => {
             atUTCTime(50, 3, 4, 5, 6, 7);

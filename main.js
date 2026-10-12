@@ -8,9 +8,9 @@ view.addLocationPreset('North Pole', 90, 0);
 view.addLocationPreset('South Pole', -90, 0);
 view.addLocationPreset('Manchester', 53.4808, -2.2426);
 
-view.addObjectPreset('Sirius', 6, 45, 9, -16, 42, 58);
-view.addObjectPreset('Polaris', 2, 31, 49, 89, 15, 51);
-view.addObjectPreset('Alpha Centauri', 14, 39, 36, -60, 50, 2);
+view.addObjectPreset('Sirius', 6, 45, 8.92, -16, 42, 58.0);
+view.addObjectPreset('Polaris', 2, 31, 49.09, 89, 15, 50.8);
+view.addObjectPreset('Alpha Centauri', 14, 39, 36.49, -60, 50, 2.4);
 
 function dateAndTime(time) {
 	return `${time.date.toISOString().slice(0, 10)} ${time.text}`;
