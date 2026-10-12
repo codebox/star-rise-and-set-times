@@ -1,19 +1,6 @@
 import * as constants from './constants.js';
 
 export function buildCalculator() {
-    function localClockTimeInRadians(clock) {
-        const previousMidnight = new Date(clock.millis());
-        previousMidnight.setMilliseconds(0);
-        previousMidnight.setSeconds(0);
-        previousMidnight.setMinutes(0);
-        previousMidnight.setHours(0);
-
-        const previousMidnightMillis = previousMidnight.getTime(),
-            secondsSinceMidnight = (clock.millis() - previousMidnightMillis) / constants.MILLISECONDS_PER_SECOND;
-
-        return constants.RADIANS_PER_DAY * secondsSinceMidnight / constants.SECONDS_PER_DAY;
-    }
-
     function zeroPad(num, len) {
         return num.toString().padStart(len, '0');
     }
@@ -46,10 +33,12 @@ export function buildCalculator() {
         }
 
         function radiansToUtcTime(radians) {
-            // the first time at or after the clock's current time that the local sidereal time equals 'radians'
+            // the first time at or after the clock's current time that the local sidereal time equals 'radians'.
+            // This uses mean sidereal time, the apparent sidereal time differs from it by about a second at most.
             const daysSince_2000_01_01_12 = (clock.millis() - constants.EPOCH_MILLIS_AT_2000_01_01_12_00_00) / constants.MILLISECONDS_PER_DAY,
-                // https://aa.usno.navy.mil/faq/docs/GAST.php
-                days = unmod(radians, 4.894961212735792 + userLocation.radians.lng, 6.30038809898489, 2 * Math.PI,
+                localSiderealTimeAt_2000_01_01_12 = constants.GMST_HOURS_AT_2000_01_01_12 * constants.RADIANS_PER_HOUR + userLocation.radians.lng,
+                siderealRadiansPerDay = constants.GMST_HOURS_PER_DAY * constants.RADIANS_PER_HOUR,
+                days = unmod(radians, localSiderealTimeAt_2000_01_01_12, siderealRadiansPerDay, 2 * Math.PI,
                     daysSince_2000_01_01_12, daysSince_2000_01_01_12 + 1)[0],
                 millisSinceEpoch = days * constants.MILLISECONDS_PER_DAY + constants.EPOCH_MILLIS_AT_2000_01_01_12_00_00;
             return millisToClockTime(millisSinceEpoch);
